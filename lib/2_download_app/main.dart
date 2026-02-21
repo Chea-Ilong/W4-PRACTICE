@@ -1,12 +1,16 @@
 import 'package:flutter/material.dart';
-
+import 'package:provider/provider.dart';
 import 'ui/providers/theme_color_provider.dart';
 import 'ui/screens/settings/settings_screen.dart';
 import 'ui/screens/downloads/downloads_screen.dart';
 import 'ui/theme/theme.dart';
 
 void main() {
-  runApp(const MyApp());
+  //wrap the app in a ChangeNotifierProviderider to provide the theme color to the whole app
+  runApp(ChangeNotifierProvider(
+    child: const MyApp(),
+    create: (context) => ThemeColorProvider(),
+  ));
 }
 
 class MyApp extends StatefulWidget {
@@ -23,6 +27,7 @@ class _MyAppState extends State<MyApp> {
 
   @override
   Widget build(BuildContext context) {
+    final themeProvider = context.watch<ThemeColorProvider>();
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       theme: appTheme,
@@ -36,7 +41,8 @@ class _MyAppState extends State<MyApp> {
               _currentIndex = index;
             });
           },
-          selectedItemColor: currentThemeColor.color,
+          // Change the selected item color to match the current theme color
+          selectedItemColor: themeProvider.currentThemeColor.color,
           items: [
             BottomNavigationBarItem(icon: Icon(Icons.home), label: 'Downloads'),
             BottomNavigationBarItem(
